@@ -3482,7 +3482,7 @@ void MainWindow::on_gywtrack_button_clicked()
         return ;
     }
 
-    namedWindow("Camera", 0);
+    namedWindow("Camera");
 
     //===这里输入参数====================================================================
 
@@ -3496,10 +3496,15 @@ void MainWindow::on_gywtrack_button_clicked()
     //==============================================================================
 
     //循环捕捉,知道用户跳出循环
-    while(!capture.read(frame))
+    while(1)
     {
 
- /*       int size =frame.cols * frame.rows;
+        if(!capture.read(frame)){
+            cerr << "Unable to read next frame." << endl;
+            cerr << "Exiting..." << endl;
+            break;
+        }
+        int size =frame.cols * frame.rows*3;
 
         img_Buffer_t *rgb_buffer;
         rgb_buffer= (img_Buffer_t*)malloc(sizeof(img_Buffer_t));
@@ -3596,14 +3601,15 @@ void MainWindow::on_gywtrack_button_clicked()
 
 
         //========================================================================
-        //size=frame.size;
+        size =frame.cols * frame.rows*3;
         memcpy(frame.data, rgb_buffer->ptr, size);
-*/
+
         imshow("Camera",frame);
       //  cvMoveWindow("Camera", 0, 0);
-        char key = waitKey(100);
-        if(key==27)
+        char key = (char)waitKey(100);
+        if(key==27)  //27==ESC
             break;
+
         switch(key)
         {
             case '0': key_v='0';
@@ -3646,8 +3652,8 @@ void MainWindow::on_gywtrack_button_clicked()
             case 'p': key_v='p';
                 break;
 
-       //     default:
-       //         break;
+            default:
+                break;
 
         }
 
